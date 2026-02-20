@@ -1,35 +1,28 @@
-- name: github-test123
+- name: tokyo-adiltest2
   production: false
-  servicePlan: F1
+  servicePlan: B1
   platform:
     dbProvider: AzureSQL Database
     imageRepository: virtopaasregistrymain.azurecr.io/saas/platform
     imageTag: latest-stable
     sqlReplica: false
     redis:
-      service: redis-prod-vc02-redis-cluster.redis-cluster:6379
+      service: redis-uat-vc03-redis-cluster.redis-cluster:6379
     config:
-      PushNotifications__ScalabilityMode: None
-      Search__Provider: ElasticSearch8
-      APPINSIGHTS_INSTRUMENTATIONKEY: 66138ce0-e52f-4a8a-a6e3-aed0f0a2a0f8
+      APPINSIGHTS_INSTRUMENTATIONKEY: 94ff0727-a095-44dd-b57f-611046d2c9d3
   storefront:
-    enabled: false
     config:
-      VirtoCommerce__DefaultStore: B2B-store
-      VirtoCommerce__Endpoint__Password: store
-      Swagger__UI__Enable: true
-      ASPNETCORE_FORWARDEDHEADERS_ENABLED: true
-      DOTNET_USE_POLLING_FILE_WATCHER: true
+      APPINSIGHTS_INSTRUMENTATIONKEY: 73e48054-a16a-48f3-a605-aa3c41ac749e
     themes:
-      B2B-store: https://github.com/VirtoCommerce/vc-frontend/releases/download/2.36.0/vc-theme-b2b-vue-2.36.0.zip
+      test111: https://github.com/VirtoCommerce/vc-frontend/releases/download/2.41.0/vc-theme-b2b-vue-2.41.0.zip
   customApps:
     app1:
       enabled: false
     app2:
       enabled: false
   routes:
-  - host: github-test123-storefront.govirto.com
-    root: B2B-store
+  - host: tokyo-test111.govirto.com
+    root: test111
     paths:
     - path: /xapi
       route: platform
