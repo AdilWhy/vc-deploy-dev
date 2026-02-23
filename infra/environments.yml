@@ -1,4 +1,5 @@
 - name: tokyo-adiltest2
+  gitops: false
   production: false
   servicePlan: B1
   platform:
@@ -11,13 +12,26 @@
     config:
       APPINSIGHTS_INSTRUMENTATIONKEY: 94ff0727-a095-44dd-b57f-611046d2c9d3
   storefront:
+    enabled: true
+    imageRepository: virtopaasregistrymain.azurecr.io/tokyo/docs
+    imageTag: 465
+    servicePlan: B1
     config:
       APPINSIGHTS_INSTRUMENTATIONKEY: 73e48054-a16a-48f3-a605-aa3c41ac749e
     themes:
       test111: https://github.com/VirtoCommerce/vc-frontend/releases/download/2.41.0/vc-theme-b2b-vue-2.41.0.zip
   customApps:
     app1:
-      enabled: false
+      enabled: true
+      servicePlan: B1
+      type: platform
+      attachedTo: platform
+      name: test000
+      imageRepository: virtopaasregistrymain.azurecr.io/tokyo/platform
+      imageTag: 3.1000.0-9e085e580
+      stickySessions: false
+      publishedService:
+        enabled: true
     app2:
       enabled: false
   routes:
