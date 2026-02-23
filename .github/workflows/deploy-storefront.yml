@@ -33,6 +33,6 @@ jobs:
 
     - name: Update app
       run: |
-        vc-build CloudEnvSetParameter -EnvironmentName adiltest2 -CloudToken ${{ secrets.VCPTCORE_PLATFORM_TOKEN }} -HelmParameters storefront.image.tag=$TAG
+        vc-build CloudEnvSetParameter -EnvironmentName adiltest2 -CloudToken ${{ secrets.VCPTCORE_PLATFORM_TOKEN }} -HelmParameters storefront.image.tag=$TAG -CloudUrl https://portal-uat.govirto.com
       env:
         TAG: ${{ env.STOREFRONT_TAG }}
