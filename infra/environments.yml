@@ -1,5 +1,5 @@
 - name: tokyo-adiltest2
-  gitops: false
+  gitops: true
   production: false
   servicePlan: B1
   platform:
@@ -19,7 +19,8 @@
     config:
       APPINSIGHTS_INSTRUMENTATIONKEY: 73e48054-a16a-48f3-a605-aa3c41ac749e
     themes:
-      test111: https://github.com/VirtoCommerce/vc-frontend/releases/download/2.41.0/vc-theme-b2b-vue-2.41.0.zip
+      test111: https://github.com/VirtoCommerce/vc-frontend/releases/download/2.33.0/vc-theme-b2b-vue-2.33.0.zip
+      B2B-store: https://github.com/VirtoCommerce/vc-frontend/releases/download/2.41.0/vc-theme-b2b-vue-2.41.0.zip
   customApps:
     app1:
       enabled: true
@@ -32,6 +33,8 @@
       stickySessions: false
       publishedService:
         enabled: true
+      secretConfig: 
+        secret-adil-test: test123
     app2:
       enabled: false
   routes:
