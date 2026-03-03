@@ -61,13 +61,16 @@
       route: platform
     - path: /Path04
       route: platform
-      caseInsensitive: true
     - path: /PATH05
       route: platform
-      caseInsensitive: true
     - path: /path06
       route: platform
-      caseInsensitive: true
+    - path: /Path06
+      route: platform
+    - path: /path07/
+      route: platform
+    - path: /path08/a
+      route: platform
     redirects:
     - path: /redirect01
       target: platform
@@ -79,4 +82,7 @@
       target: platform
     - path: /REDIRECT04
       target: platform
+    - path: ^/software_pages/viewsoftwarepage.cfm\\?code=(.*)$
+      target: platform
+      regex: true
   version: 3.240
