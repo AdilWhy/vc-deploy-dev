@@ -41,10 +41,6 @@
   - host: tokyo-test111.govirto.com
     root: test111
     paths:
-    - path: /path01
-      route: /category/591e75f2-0954-49b3-90d0-077c270955c4
-    - path: /Path02
-      route: /category/6ef7c5e6-fb2d-4c68-bc45-8186c5d3dd05
     - path: /xapi
       route: platform
     - path: /files
@@ -57,11 +53,30 @@
       route: platform
     - path: /api/files
       route: platform
+    - path: /Path01
+      route: platform
+    - path: /PATH02
+      route: platform
+    - path: /path03
+      route: platform
+    - path: /Path04
+      route: platform
+      caseInsensitive: true
+    - path: /PATH05
+      route: platform
+      caseInsensitive: true
+    - path: /path06
+      route: platform
+      caseInsensitive: true
     redirects:
-    - path: /test01
-      target: /category/d6019d4d27e44854a58ebbd5428b873b
-      regex: true
-    - path: /Test02
+    - path: /redirect01
       target: platform
       regex: true
+    - path: /REDIRECT02
+      target: platform
+      regex: true
+    - path: /redirect03
+      target: platform
+    - path: /REDIRECT04
+      target: platform
   version: 3.240
