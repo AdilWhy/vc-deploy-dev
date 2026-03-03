@@ -82,7 +82,7 @@
       target: platform
     - path: /REDIRECT04
       target: platform
-    - path: ^/software_pages/viewsoftwarepage.cfm\\?code=(.*)$
+    - path: /software_pages/viewsoftwarepage.cfm\\?code=(.*)$
       target: platform
       regex: true
   version: 3.240
