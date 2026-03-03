@@ -31,16 +31,20 @@
       imageRepository: virtopaasregistrymain.azurecr.io/tokyo/platform
       imageTag: 3.1000.0-9e085e580
       stickySessions: false
+      secretConfig:
+        secret-adil-test: test123
       publishedService:
         enabled: true
-      secretConfig: 
-        secret-adil-test: test123
     app2:
       enabled: false
   routes:
   - host: tokyo-test111.govirto.com
     root: test111
     paths:
+    - path: /path01
+      route: /category/591e75f2-0954-49b3-90d0-077c270955c4
+    - path: /Path02
+      route: /category/6ef7c5e6-fb2d-4c68-bc45-8186c5d3dd05
     - path: /xapi
       route: platform
     - path: /files
@@ -53,4 +57,11 @@
       route: platform
     - path: /api/files
       route: platform
+    redirects:
+    - path: /test01
+      target: /category/d6019d4d27e44854a58ebbd5428b873b
+      regex: true
+    - path: /Test02
+      target: platform
+      regex: true
   version: 3.240
