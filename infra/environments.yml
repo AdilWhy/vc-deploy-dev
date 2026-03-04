@@ -103,13 +103,13 @@
       regex: true
     rewrites:
     - path: (?i)^/path01$
-      target: https://ineagresta.com
+      target: /path01
     - path: (?i)^/path02$
-      target: https://ineagresta.com
+      target: /path02
     - path: (?i)^/path03$
-      target: https://ineagresta.com
+      target: https://tokyo-test111.govirto.com/path03
     - path: (?i)^/path04$
-      target: https://ineagresta.com
+      target: https://tokyo-test111.govirto.com/path04
     - path: (?i)^/path05$
       target: https://ineagresta.com
     - path: (?i)^/path06$
