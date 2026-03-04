@@ -98,7 +98,32 @@
       target: platform
     - path: /REDIRECT04
       target: platform
-    - path: /software_pages/viewsoftwarepage.cfm\\?code=(.*)$
+    - path: (?i)^/software_pages/viewsoftwarepage.cfm\\?code=(.*)$
       target: platform
       regex: true
+  rewrites:
+    - path: (?i)^/path01$
+      target: https://ineagresta.com
+    - path: (?i)^/path02$
+      target: https://ineagresta.com
+    - path: (?i)^/path03$
+      target: https://ineagresta.com
+    - path: (?i)^/path04$
+      target: https://ineagresta.com
+    - path: (?i)^/path05$
+      target: https://ineagresta.com
+    - path: (?i)^/path06$
+      target: https://ineagresta.com
+    - path: (?i)^/path07/$
+      target: https://ineagresta.com
+    - path: (?i)^/path08$
+      target: https://ineagresta.com
+    - path: (?i)^/path09/a$
+      target: https://ineagresta.com
+    - path: (?i)^/path10/a$
+      target: https://ineagresta.com
+    - path: (?i)^/path11\.txt$
+      target: https://ineagresta.com
+    - path: (?i)^/path12\.txt$
+      target: https://ineagresta.com
   version: 3.240
