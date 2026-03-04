@@ -82,10 +82,11 @@
       caseInsensitive: true
     - path: /path011.txt
       route: platform
+      fileLocation: /cms-content/assets/stores/test111/robots-us/robots.txt
     - path: /path12.txt
       route: platform
+      fileLocation: /cms-content/assets/stores/test111/robots-us/robots.txt
       caseInsensitive: true
-    
     redirects:
     - path: /redirect01
       target: platform
