@@ -61,16 +61,31 @@
       route: platform
     - path: /Path04
       route: platform
+      caseInsensitive: true
     - path: /PATH05
       route: platform
+      caseInsensitive: true
     - path: /path06
       route: platform
     - path: /Path06
       route: platform
+      caseInsensitive: true
     - path: /path07/
       route: platform
-    - path: /path08/a
+    - path: /path08/
       route: platform
+      caseInsensitive: true
+    - path: /path09/a
+      route: platform
+    - path: /path10/a
+      route: platform
+      caseInsensitive: true
+    - path: /path011.txt
+      route: platform
+    - path: /path12.txt
+      route: platform
+      caseInsensitive: true
+    
     redirects:
     - path: /redirect01
       target: platform
