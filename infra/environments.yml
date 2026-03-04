@@ -103,19 +103,19 @@
       regex: true
     rewrites:
     - path: (?i)^/path01$
-      target: /path01
+      target: platform
     - path: (?i)^/path02$
-      target: /path02
+      target: platform
     - path: (?i)^/path03$
-      target: https://tokyo-test111.govirto.com/path03
+      target: https://tokyo-test111.govirto.com
     - path: (?i)^/path04$
-      target: https://tokyo-test111.govirto.com/path04
+      target: https://tokyo-test111.govirto.com
     - path: (?i)^/path05$
-      target: https://ineagresta.com
+      target: https://tokyo-test111.govirto.com/category/532a6b5a-cf15-461a-836e-71bad60d49a3
     - path: (?i)^/path06$
-      target: https://ineagresta.com
+      target: https://tokyo-test111.govirto.com/category/6ef7c5e6-fb2d-4c68-bc45-8186c5d3dd05
     - path: (?i)^/path07/$
-      target: https://ineagresta.com
+      target: platform
     - path: (?i)^/path08$
       target: https://ineagresta.com
     - path: (?i)^/path09/a$
