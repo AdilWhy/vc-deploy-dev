@@ -99,7 +99,7 @@
     - path: /REDIRECT04
       target: platform
     - path: (?i)^/software_pages/viewsoftwarepage.cfm\\?code=(.*)$
-      target: platform
+      target: /software-pages/\$\1
       regex: true
     rewrites:
     - path: (?i)^/path01$
