@@ -87,6 +87,8 @@
       route: platform
       fileLocation: /cms-content/assets/stores/test111/robots-us/robots.txt
       caseInsensitive: true
+    - path: /navigation.cfm
+      route: platform
     redirects:
     - path: /redirect01
       target: platform
@@ -126,4 +128,6 @@
       target: https://ineagresta.com
     - path: (?i)^/path12\.txt$
       target: https://ineagresta.com
+    - path: (?i)/navigation\.cfm$
+      target: /navigation.cfm
   version: 3.240
