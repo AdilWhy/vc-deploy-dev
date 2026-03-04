@@ -101,7 +101,7 @@
     - path: (?i)^/software_pages/viewsoftwarepage.cfm\\?code=(.*)$
       target: platform
       regex: true
-  rewrites:
+    rewrites:
     - path: (?i)^/path01$
       target: https://ineagresta.com
     - path: (?i)^/path02$
