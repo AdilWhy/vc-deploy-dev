@@ -115,13 +115,13 @@
     - path: (?i)^/path06$
       target: https://tokyo-test111.govirto.com/category/6ef7c5e6-fb2d-4c68-bc45-8186c5d3dd05
     - path: (?i)^/path07/$
-      target: platform
+      target: /path07/
     - path: (?i)^/path08$
-      target: https://ineagresta.com
+      target: /path08
     - path: (?i)^/path09/a$
-      target: https://ineagresta.com
+      target: /path09/a
     - path: (?i)^/path10/a$
-      target: https://ineagresta.com
+      target: /path10/a
     - path: (?i)^/path11\.txt$
       target: https://ineagresta.com
     - path: (?i)^/path12\.txt$
