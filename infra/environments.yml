@@ -16,14 +16,14 @@
     config:
       APPINSIGHTS_INSTRUMENTATIONKEY: 76855c9b-9383-453f-81e5-3e48c19c3715
     themes:
-      B2B-Store: https://github.com/VirtoCommerce/vc-frontend/releases/download/2.41.0/vc-theme-b2b-vue-2.41.0.zip
+      B2B-Store: https://github.com/VirtoCommerce/vc-frontend/releases/download/2.42.0/vc-theme-b2b-vue-2.41.0.zip
   customApps:
     app1:
       enabled: false
     app2:
       enabled: false
   routes:
-  - host: almaty-cool-b2bstore.virtocloud.dev
+  - host: almaty-cool-storefront.virtocloud.dev
     root: B2B-Store
     ssl: true
     paths:
@@ -39,73 +39,4 @@
       route: platform
     - path: /api/files
       route: platform
-      caseInsensitive: true
-    - path: /PATH05
-      route: platform
-      caseInsensitive: true
-    - path: /path06
-      route: platform
-    - path: /Path06
-      route: platform
-      caseInsensitive: true
-    - path: /path07/
-      route: platform
-    - path: /path08/
-      route: platform
-      caseInsensitive: true
-    - path: /path09/a
-      route: platform
-    - path: /path10/a
-      route: platform
-      caseInsensitive: true
-    - path: /path011.txt
-      route: platform
-      fileLocation: /cms-content/assets/stores/test111/robots-us/robots.txt
-    - path: /path12.txt
-      route: platform
-      fileLocation: /cms-content/assets/stores/test111/robots-us/robots.txt
-      caseInsensitive: true
-    - path: /navigation.cfm
-      route: platform
-    redirects:
-    - path: /redirect01
-      target: platform
-      regex: true
-    - path: /REDIRECT02
-      target: platform
-      regex: true
-    - path: /redirect03
-      target: platform
-    - path: /REDIRECT04
-      target: platform
-    - path: (?i)^/software_pages/viewsoftwarepage.cfm\\?code=(.*)$
-      target: /software-pages/\$\1
-      regex: true
-    rewrites:
-    - path: (?i)^/path01$
-      target: platform
-    - path: (?i)^/path02$
-      target: platform
-    - path: (?i)^/path03$
-      target: https://tokyo-test111.govirto.com
-    - path: (?i)^/path04$
-      target: https://tokyo-test111.govirto.com
-    - path: (?i)^/path05$
-      target: https://tokyo-test111.govirto.com/category/532a6b5a-cf15-461a-836e-71bad60d49a3
-    - path: (?i)^/path06$
-      target: https://tokyo-test111.govirto.com/category/6ef7c5e6-fb2d-4c68-bc45-8186c5d3dd05
-    - path: (?i)^/path07/$
-      target: /path07/
-    - path: (?i)^/path08$
-      target: /path08
-    - path: (?i)^/path09/a$
-      target: /path09/a
-    - path: (?i)^/path10/a$
-      target: /path10/a
-    - path: (?i)^/path11\.txt$
-      target: https://ineagresta.com
-    - path: (?i)^/path12\.txt$
-      target: https://ineagresta.com
-    - path: (?i)/navigation\.cfm$
-      target: /navigation.cfm
   version: 3.238
