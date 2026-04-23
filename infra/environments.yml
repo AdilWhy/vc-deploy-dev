@@ -11,12 +11,15 @@
     config:
       APPINSIGHTS_INSTRUMENTATIONKEY: a2d5234e-7f26-43d2-b34d-a0d5e607fcd0
   storefront:
-    imageRepository: ghcr.io/virtocommerce/storefront
-    imageTag: 6.24.0-alpha.962-pt-12422-bbc13210
+    enabled: false
     config:
-      APPINSIGHTS_INSTRUMENTATIONKEY: 76855c9b-9383-453f-81e5-3e48c19c3715
+      VirtoCommerce__DefaultStore: B2B-store
+      VirtoCommerce__Endpoint__Password: store
+      Swagger__UI__Enable: true
+      ASPNETCORE_FORWARDEDHEADERS_ENABLED: true
+      DOTNET_USE_POLLING_FILE_WATCHER: true
     themes:
-      B2B-store: https://github.com/VirtoCommerce/vc-frontend/releases/download/2.42.0/vc-theme-b2b-vue-2.41.0.zip
+      B2B-store: https://github.com/VirtoCommerce/vc-frontend/releases/download/2.42.0/vc-theme-b2b-vue-2.42.0.zip
   customApps:
     app1:
       enabled: false
