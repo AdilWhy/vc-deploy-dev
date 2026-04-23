@@ -21,8 +21,8 @@ jobs:
 
       - name: Update app
         run: |
-          vc-build CloudEnvUpdate -CloudToken ${{ secrets.VCPTCORE_PLATFORM_TOKEN }} -ArgoConfigFile $ENV_FILE -CloudUrl https://portal-uat.govirto.com
+          vc-build CloudEnvUpdate -CloudToken ${{ secrets.VCPTCORE_PLATFORM_TOKEN }} -ArgoConfigFile $ENV_FILE -CloudUrl https://portal.virtocloud.dev
         env:
           ENV_FILE: './infra/environments.yml'
-          ARGO_SERVER: https://argo.virtocommerce.cloud
+          ARGO_SERVER: https://argocd.virtocloud.dev
           TOKEN: ${{ secrets.VCPTCORE_TOKEN }}
