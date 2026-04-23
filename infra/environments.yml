@@ -1,5 +1,4 @@
-- name: tokyo-adiltest2
-  gitops: true
+- name: almaty-cool
   production: false
   servicePlan: B1
   platform:
@@ -8,38 +7,25 @@
     imageTag: latest-stable
     sqlReplica: false
     redis:
-      service: redis-uat-vc03-redis-cluster.redis-cluster:6379
+      service: redis-dev-vc01-redis-cluster.redis-cluster:6379
     config:
-      APPINSIGHTS_INSTRUMENTATIONKEY: 94ff0727-a095-44dd-b57f-611046d2c9d3
+      APPINSIGHTS_INSTRUMENTATIONKEY: a2d5234e-7f26-43d2-b34d-a0d5e607fcd0
   storefront:
-    enabled: true
-    imageRepository: virtopaasregistrymain.azurecr.io/tokyo/docs
-    imageTag: 465
-    servicePlan: B1
+    imageRepository: ghcr.io/virtocommerce/storefront
+    imageTag: 6.24.0-alpha.962-pt-12422-bbc13210
     config:
-      APPINSIGHTS_INSTRUMENTATIONKEY: 73e48054-a16a-48f3-a605-aa3c41ac749e
+      APPINSIGHTS_INSTRUMENTATIONKEY: 76855c9b-9383-453f-81e5-3e48c19c3715
     themes:
-      test111: https://github.com/VirtoCommerce/vc-frontend/releases/download/2.33.0/vc-theme-b2b-vue-2.33.0.zip
-      B2B-store: https://github.com/VirtoCommerce/vc-frontend/releases/download/2.41.0/vc-theme-b2b-vue-2.41.0.zip
+      B2B-Store: https://github.com/VirtoCommerce/vc-frontend/releases/download/2.41.0/vc-theme-b2b-vue-2.41.0.zip
   customApps:
     app1:
-      enabled: true
-      servicePlan: B1
-      type: platform
-      attachedTo: platform
-      name: test000
-      imageRepository: virtopaasregistrymain.azurecr.io/tokyo/platform
-      imageTag: 3.1000.0-9e085e580
-      stickySessions: false
-      secretConfig:
-        secret-adil-test: test123
-      publishedService:
-        enabled: true
+      enabled: false
     app2:
       enabled: false
   routes:
-  - host: tokyo-test111.govirto.com
-    root: test111
+  - host: almaty-b2bstore.virtocloud.dev
+    root: B2B-Store
+    ssl: true
     paths:
     - path: /xapi
       route: platform
@@ -52,14 +38,6 @@
     - path: /revoke/token
       route: platform
     - path: /api/files
-      route: platform
-    - path: /Path01
-      route: platform
-    - path: /PATH02
-      route: platform
-    - path: /path03
-      route: platform
-    - path: /Path04
       route: platform
       caseInsensitive: true
     - path: /PATH05
@@ -130,4 +108,4 @@
       target: https://ineagresta.com
     - path: (?i)/navigation\.cfm$
       target: /navigation.cfm
-  version: 3.240
+  version: 3.238
