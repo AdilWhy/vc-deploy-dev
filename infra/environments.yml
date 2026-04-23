@@ -24,7 +24,7 @@
       enabled: false
   routes:
   - host: almaty-cool-storefront.virtocloud.dev
-    root: B2B-Store
+    root: B2B-store
     ssl: true
     paths:
     - path: /xapi
