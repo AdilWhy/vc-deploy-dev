@@ -23,7 +23,7 @@
     app2:
       enabled: false
   routes:
-  - host: almaty-b2bstore.virtocloud.dev
+  - host: almaty-cool-b2bstore.virtocloud.dev
     root: B2B-Store
     ssl: true
     paths:
