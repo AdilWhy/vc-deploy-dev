@@ -12,7 +12,7 @@
     imageRepository: ghcr.io/virtocommerce/storefront
     imageTag: 6.24.0-alpha.962-pt-12422-bbc13210
     themes:
-      B2B-store: https://github.com/VirtoCommerce/vc-frontend/releases/download/2.42.0/vc-theme-b2b-vue-2.42.0.zip
+      B2B-store: https://github.com/VirtoCommerce/vc-frontend/releases/download/2.42.0/vc-theme-b2b-vue-2.47.0.zip
   customApps:
     app1:
       enabled: false
