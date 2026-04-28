@@ -9,13 +9,8 @@
     redis:
       service: redis-dev-vc01-redis-cluster.redis-cluster:6379
   storefront:
-    enabled: false
-    config:
-      VirtoCommerce__DefaultStore: B2B-store
-      VirtoCommerce__Endpoint__Password: store
-      Swagger__UI__Enable: true
-      ASPNETCORE_FORWARDEDHEADERS_ENABLED: true
-      DOTNET_USE_POLLING_FILE_WATCHER: true
+    imageRepository: ghcr.io/virtocommerce/storefront
+    imageTag: 6.24.0-alpha.962-pt-12422-bbc13210
     themes:
       B2B-store: https://github.com/VirtoCommerce/vc-frontend/releases/download/2.42.0/vc-theme-b2b-vue-2.42.0.zip
   customApps:
@@ -39,4 +34,6 @@
       route: platform
     - path: /api/files
       route: platform
-  version: 3.240
+    - path: /test
+      route: platform
+  version: 3.238
