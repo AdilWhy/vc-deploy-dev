@@ -1,15 +1,13 @@
-- name: almaty-cool
+- name: almaty-test123
   production: false
   servicePlan: B1
   platform:
     dbProvider: AzureSQL Database
     imageRepository: virtopaasregistrymain.azurecr.io/saas/platform
-    imageTag: latest-stable
+    imageTag: 14.0.22-stable
     sqlReplica: false
     redis:
       service: redis-dev-vc01-redis-cluster.redis-cluster:6379
-    config:
-      APPINSIGHTS_INSTRUMENTATIONKEY: a2d5234e-7f26-43d2-b34d-a0d5e607fcd0
   storefront:
     enabled: false
     config:
@@ -26,9 +24,8 @@
     app2:
       enabled: false
   routes:
-  - host: almaty-cool-storefront.virtocloud.dev
+  - host: almaty-test123-front.virtocloud.dev
     root: B2B-store
-    ssl: true
     paths:
     - path: /xapi
       route: platform
@@ -42,4 +39,4 @@
       route: platform
     - path: /api/files
       route: platform
-  version: 3.238
+  version: 3.240
