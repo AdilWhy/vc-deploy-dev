@@ -1,0 +1,143 @@
+# Стенд: правка route не даёт перехода окружения в Progressing.
+#
+# Воспроизводит связку шагов из пайплайна команд (Azure DevOps):
+#   CloudEnvUpdate -> CloudEnvStatus Progressing -> CloudEnvStatus Healthy+Synced
+# и параллельно пишет посекундный таймлайн статусов портала.
+#
+# ВАЖНО: правка environments.yml делается ТОЛЬКО в раннере и никуда не коммитится.
+# CloudEnvUpdate читает локальный файл и PUT-ит его в портал, поэтому git не нужен
+# и deploy-infra.yml не срабатывает параллельно. Побочный эффект: git и портал
+# разъезжаются до следующего реального пуша в infra/**.
+
+name: VCI status probe
+
+on:
+  workflow_dispatch:
+    inputs:
+      envName:
+        description: 'Имя окружения'
+        required: true
+        default: 'almaty-vci1394'
+      mode:
+        description: 'route = опыт (правка пути), platform-config = контроль (рестарт), none = только проба'
+        required: true
+        default: 'route'
+        type: choice
+        options: [route, platform-config, none]
+      progressingDelay:
+        description: 'Интервал опроса на шаге Progressing, сек'
+        required: true
+        default: '5'
+      progressingAttempts:
+        description: 'Число попыток на шаге Progressing'
+        required: true
+        default: '12'
+
+env:
+  ENV_FILE: ./infra/environments.yml
+  CLOUD_URL: https://portal.virtocloud.dev
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install vc-build
+        run: dotnet tool install --global VirtoCommerce.GlobalTool
+
+      - name: Dump portal payload (какие поля вообще есть)
+        run: |
+          echo "--- сырой ответ портала до апдейта ---"
+          curl -s -H "api_key: ${{ secrets.VCPTCORE_PLATFORM_TOKEN }}" \
+            "${CLOUD_URL}/api/saas/environments/${{ inputs.envName }}" | tee before.json | jq .
+          echo "--- ключи верхнего уровня ---"
+          jq -r 'keys[]' before.json
+
+      - name: Start status probe
+        run: |
+          cat > probe.sh <<'EOF'
+          #!/usr/bin/env bash
+          set -uo pipefail
+          URL="${CLOUD_URL}/api/saas/environments/${ENV_NAME}"
+          prev=""
+          while true; do
+            json=$(curl -sf -H "api_key: ${CLOUD_TOKEN}" "${URL}") || { sleep 1; continue; }
+            cur=$(jq -rc '{status, syncStatus}' <<<"${json}" 2>/dev/null) || cur='PARSE_ERROR'
+            if [[ "${cur}" != "${prev}" ]]; then
+              printf '%s  %s\n' "$(date -u +%T)" "${cur}"
+              prev="${cur}"
+            fi
+            sleep 1
+          done
+          EOF
+          chmod +x probe.sh
+          nohup ./probe.sh > timeline.log 2>&1 &
+          echo $! > probe.pid
+          sleep 3
+          echo "--- базовая линия ---"; cat timeline.log
+        env:
+          CLOUD_TOKEN: ${{ secrets.VCPTCORE_PLATFORM_TOKEN }}
+          ENV_NAME: ${{ inputs.envName }}
+
+      - name: Mutate environments.yml
+        run: |
+          set -e
+          case "${{ inputs.mode }}" in
+            route)
+              # Опыт: меняем путь у существующей route-записи под host.
+              # Убираем прошлый маркер и кладём новый — в отрендеренном Ingress
+              # меняется строка path у уже существующего объекта.
+              yq -i '(.[] | select(.name == strenv(ENV_NAME)) | .routes[0].paths) |=
+                       ((. // []) | map(select(.path | test("^/vci-probe") | not))
+                        + [{"path": "/vci-probe-" + strenv(RUN_NUMBER), "route": "platform"}])' "$ENV_FILE"
+              ;;
+            platform-config)
+              # Контроль: правим platform.config -> меняется platform-cm ->
+              # меняется checksum/config у Rollout -> реальный рестарт -> Progressing.
+              yq -i '(.[] | select(.name == strenv(ENV_NAME)) | .platform.config.VCI_PROBE) = strenv(RUN_NUMBER)' "$ENV_FILE"
+              ;;
+            none) echo "без изменений" ;;
+          esac
+          echo "--- итоговый манифест окружения ---"
+          yq '.[] | select(.name == strenv(ENV_NAME))' "$ENV_FILE"
+        env:
+          ENV_NAME: ${{ inputs.envName }}
+          RUN_NUMBER: ${{ github.run_number }}
+
+      - name: GitOps update
+        run: |
+          date -u +'update started at %T'
+          vc-build CloudEnvUpdate -ArgoConfigFile "$ENV_FILE" \
+            -CloudUrl "$CLOUD_URL" -CloudToken ${{ secrets.VCPTCORE_PLATFORM_TOKEN }}
+          date -u +'update finished at %T'
+
+      - name: Check deployment start
+        continue-on-error: true
+        run: |
+          vc-build CloudEnvStatus -CloudUrl "$CLOUD_URL" \
+            -CloudToken ${{ secrets.VCPTCORE_PLATFORM_TOKEN }} \
+            -EnvironmentName "${{ inputs.envName }}" -HealthStatus Progressing \
+            -Delay ${{ inputs.progressingDelay }} -AttemptsNumber ${{ inputs.progressingAttempts }}
+
+      - name: Check deployment status
+        continue-on-error: true
+        run: |
+          vc-build CloudEnvStatus -CloudUrl "$CLOUD_URL" \
+            -CloudToken ${{ secrets.VCPTCORE_PLATFORM_TOKEN }} \
+            -EnvironmentName "${{ inputs.envName }}" -HealthStatus Healthy -SyncStatus Synced
+
+      - name: Stop probe & print timeline
+        if: always()
+        run: |
+          kill "$(cat probe.pid)" 2>/dev/null || true
+          echo "=============== ТАЙМЛАЙН СТАТУСОВ ==============="
+          cat timeline.log
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: status-timeline-${{ inputs.mode }}-${{ github.run_number }}
+          path: |
+            timeline.log
+            before.json

@@ -1,39 +1,23 @@
-- name: almaty-test123
+- name: almaty-vci1394
   production: false
   servicePlan: B1
   platform:
     dbProvider: AzureSQL Database
     imageRepository: virtopaasregistrymain.azurecr.io/saas/platform
-    imageTag: 14.0.22-stable
+    imageTag: latest-stable
     sqlReplica: false
     redis:
       service: redis-dev-vc01-redis-cluster.redis-cluster:6379
+    config:
+      APPINSIGHTS_INSTRUMENTATIONKEY: 2b490c87-ebae-4266-9486-f1be18ed2078
   storefront:
     imageRepository: ghcr.io/virtocommerce/storefront
     imageTag: 6.24.0-alpha.962-pt-12422-bbc13210
-    themes:
-      B2B-store: https://github.com/VirtoCommerce/vc-frontend/releases/download/2.42.0/vc-theme-b2b-vue-2.47.0.zip
+    config:
+      APPINSIGHTS_INSTRUMENTATIONKEY: 1198d5af-27cb-470b-a656-f8289e564bdb
   customApps:
     app1:
       enabled: false
     app2:
       enabled: false
-  routes:
-  - host: almaty-test123-front.virtocloud.dev
-    root: B2B-store
-    paths:
-    - path: /xapi
-      route: platform
-    - path: /files
-      route: platform
-    - path: /connect/token
-      route: platform
-    - path: /graphql
-      route: platform
-    - path: /revoke/token
-      route: platform
-    - path: /api/files
-      route: platform
-    - path: /test
-      route: platform
   version: 3.238
