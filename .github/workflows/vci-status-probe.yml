@@ -32,6 +32,10 @@ on:
         description: 'Число попыток на шаге Progressing'
         required: true
         default: '12'
+      finalAttempts:
+        description: 'Число попыток финального гейта Healthy+Synced (шаг 10 сек)'
+        required: true
+        default: '180'
 
 env:
   ENV_FILE: ./infra/environments.yml
@@ -126,6 +130,18 @@ jobs:
           ENV_NAME: ${{ inputs.envName }}
           RUN_NUMBER: ${{ github.run_number }}
 
+      # Гейт по OutOfSync врёт, если окружение УЖЕ было OutOfSync до апдейта.
+      # Дожидаемся тишины, тогда последующий OutOfSync означает именно наше изменение.
+      # Тот же приём, что в CloudEnvSetParameter (Build.SaaS.cs:141).
+      - name: Wait for quiet before update
+        run: |
+          date -u +'quiet gate started at %T'
+          vc-build CloudEnvStatus -CloudUrl "$CLOUD_URL" \
+            -CloudToken ${{ secrets.VCPTCORE_PLATFORM_TOKEN }} \
+            -EnvironmentName "${{ inputs.envName }}" -SyncStatus Synced \
+            -Delay 10 -AttemptsNumber 60
+          date -u +'quiet gate finished at %T'
+
       - name: GitOps update
         run: |
           date -u +'update started at %T'
@@ -158,9 +174,12 @@ jobs:
       - name: Check deployment status
         continue-on-error: true
         run: |
+          date -u +'final gate started at %T'
           vc-build CloudEnvStatus -CloudUrl "$CLOUD_URL" \
             -CloudToken ${{ secrets.VCPTCORE_PLATFORM_TOKEN }} \
-            -EnvironmentName "${{ inputs.envName }}" -HealthStatus Healthy -SyncStatus Synced
+            -EnvironmentName "${{ inputs.envName }}" -HealthStatus Healthy -SyncStatus Synced \
+            -Delay 10 -AttemptsNumber ${{ inputs.finalAttempts }}
+          date -u +'final gate finished at %T'
 
       - name: Stop probe & print timeline
         if: always()
