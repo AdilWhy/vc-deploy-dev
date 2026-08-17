@@ -15,9 +15,20 @@
     imageTag: 6.24.0-alpha.962-pt-12422-bbc13210
     config:
       APPINSIGHTS_INSTRUMENTATIONKEY: 1198d5af-27cb-470b-a656-f8289e564bdb
+    themes:
+      B2B-store: https://github.com/VirtoCommerce/vc-frontend/releases/download/2.54.0/vc-theme-b2b-vue-2.54.0.zip
   customApps:
     app1:
       enabled: false
     app2:
       enabled: false
+  routes:
+  - host: almaty-vci1394-test.virtocloud.dev
+    root: B2B-store
+    ssl: true
+    paths:
+    - path: /xapi
+      route: platform
+    - path: /graphql
+      route: platform
   version: 3.238
