@@ -48,10 +48,18 @@ jobs:
 
       - name: Dump portal payload (какие поля вообще есть)
         run: |
+          set -e
           echo "--- сырой ответ портала до апдейта ---"
-          curl -s -H "api_key: ${{ secrets.VCPTCORE_PLATFORM_TOKEN }}" \
-            "${CLOUD_URL}/api/saas/environments/${{ inputs.envName }}" | tee before.json | jq .
-          echo "--- ключи верхнего уровня ---"
+          code=$(curl -s -o before.json -w '%{http_code}' \
+            -H "api_key: ${{ secrets.VCPTCORE_PLATFORM_TOKEN }}" \
+            "${CLOUD_URL}/api/saas/environments/${{ inputs.envName }}")
+          echo "HTTP $code"
+          if [ "$code" != "200" ]; then
+            echo "::error::портал не отдал окружение '${{ inputs.envName }}' (HTTP $code). Среда точно создана и запушена?"
+            cat before.json; exit 1
+          fi
+          jq . before.json
+          echo "--- ключи верхнего уровня: есть ли маркер вроде finishedAt/revision? ---"
           jq -r 'keys[]' before.json
 
       - name: Start status probe
@@ -83,6 +91,15 @@ jobs:
       - name: Mutate environments.yml
         run: |
           set -e
+          # yq молча выходит с нулём, если select ничего не нашёл, — проверяем явно,
+          # иначе опечатка в имени даст ложный результат "Progressing не наступил".
+          found=$(yq '[.[] | select(.name == strenv(ENV_NAME))] | length' "$ENV_FILE")
+          [ "$found" = "1" ] || { echo "::error::окружение '$ENV_NAME' не найдено в $ENV_FILE (совпадений: $found)"; exit 1; }
+          if [ "${{ inputs.mode }}" = "route" ]; then
+            routes=$(yq '[.[] | select(.name == strenv(ENV_NAME)) | .routes[0].paths // []] | flatten | length' "$ENV_FILE")
+            [ "$routes" -gt 0 ] || { echo "::error::у окружения нет routes[0].paths — сначала заведите роуты и дайте среде встать"; exit 1; }
+          fi
+          cp "$ENV_FILE" /tmp/manifest-before.yml
           case "${{ inputs.mode }}" in
             route)
               # Опыт: меняем путь у существующей route-записи под host.
@@ -99,6 +116,10 @@ jobs:
               ;;
             none) echo "без изменений" ;;
           esac
+          if [ "${{ inputs.mode }}" != "none" ]; then
+            diff -u /tmp/manifest-before.yml "$ENV_FILE" \
+              && { echo "::error::манифест не изменился — менять нечего, опыт бессмысленен"; exit 1; }
+          fi
           echo "--- итоговый манифест окружения ---"
           yq '.[] | select(.name == strenv(ENV_NAME))' "$ENV_FILE"
         env:
@@ -112,7 +133,21 @@ jobs:
             -CloudUrl "$CLOUD_URL" -CloudToken ${{ secrets.VCPTCORE_PLATFORM_TOKEN }}
           date -u +'update finished at %T'
 
-      - name: Check deployment start
+      # Предлагаемый гейт: ждём OutOfSync — «портал принял манифест, Argo увидел
+      # новое желаемое состояние». Появляется при любом изменении, в том числе
+      # health-нейтральном. Стоит первым: выходит сразу, как увидит OutOfSync.
+      - name: 'Check deployment start (proposed: OutOfSync)'
+        continue-on-error: true
+        run: |
+          date -u +'proposed gate started at %T'
+          vc-build CloudEnvStatus -CloudUrl "$CLOUD_URL" \
+            -CloudToken ${{ secrets.VCPTCORE_PLATFORM_TOKEN }} \
+            -EnvironmentName "${{ inputs.envName }}" -SyncStatus OutOfSync \
+            -Delay ${{ inputs.progressingDelay }} -AttemptsNumber ${{ inputs.progressingAttempts }}
+          date -u +'proposed gate finished at %T'
+
+      # Текущий гейт из пайплайна команд — оставлен для сравнения.
+      - name: 'Check deployment start (current: Progressing)'
         continue-on-error: true
         run: |
           vc-build CloudEnvStatus -CloudUrl "$CLOUD_URL" \
